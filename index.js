@@ -1,26 +1,44 @@
 /*
-  An npm JavaScript library for front end web apps. Implements a minimal
-  Bitcoin Cash wallet.
+  This is a boilerplate for creating a JS-based cron job. It uses the cron
+  npm library to set up a cron job. It uses shelljs npm library to execute
+  shell scripts.
 */
 
 /* eslint-disable no-async-promise-executor */
 
 'use strict'
 
-const BCHJS = require('@psf/bch-js')
+// Public npm libraries
+const CronJob = require('cron').CronJob
+const shell = require('shelljs')
 
+// Local libraries
 const Util = require('./lib/util')
 const util = new Util()
 
 let _this // local global for 'this'.
 
-class BoilplateLib {
+class MyCron {
   constructor () {
     _this = this
 
-    _this.bchjs = new BCHJS()
     _this.util = util
+    _this.shell = shell
+  }
+
+  async startJob () {
+    return new CronJob(
+      '* * * * * *', // Execute every second.
+      function () {
+        _this.shell.exec('./example-shell-script.sh')
+      },
+      null,
+      true,
+      'America/Los_Angeles'
+    )
   }
 }
 
-module.exports = BoilplateLib
+// Start the cron job.
+const myCron = new MyCron()
+myCron.startJob()
